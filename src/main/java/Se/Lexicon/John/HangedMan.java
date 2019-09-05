@@ -17,8 +17,8 @@ public class HangedMan {
     public void newGame() {
         int rng = ThreadLocalRandom.current().nextInt(0, 10);
         secretWord = secretWordBank[rng];
-        char[] word = secretWord.toCharArray();
-        char[] guess = new char[word.length];
+        char [] word = secretWord.toCharArray();
+        char [] guess = new char[word.length];
         System.out.println("");
         Arrays.fill(guess, '_');
         makeGuess(guess, word);
@@ -28,6 +28,7 @@ public class HangedMan {
     public void makeGuess(char[] guess, char[] word) {
         if (numberOfGuesses >= 8) {
             printGallows();
+            looseGame();
         }
         else {
             printGallows();
@@ -176,7 +177,6 @@ public class HangedMan {
                 System.out.println("/|\\   |");
                 System.out.println("/ \\   |");
                 System.out.println("      |");
-                looseGame();
                 break;
         }
     }
