@@ -6,10 +6,4 @@ public class App
         HangedMan Game = new HangedMan();
         Game.newGame();
     }
-
-
-
-
-
-
 }

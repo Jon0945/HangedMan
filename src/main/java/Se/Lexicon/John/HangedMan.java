@@ -11,7 +11,31 @@ public class HangedMan {
     private String secretWord;
     private String[] secretWordBank = {"Door", "Horse", "Football", "Beer", "Refreshing", "Shower", "Stadium", "Lemon", "Strawberry", "Cloudberry"};
     private String userGuess;
-    private StringBuilder guessed = new StringBuilder();
+    private StringBuilder guessed;
+    private boolean GameOver = false;
+
+    //Getters and Setters
+    public String[] getSecretWordBank() { return secretWordBank; }
+    public int getNumberOfGuesses() { return numberOfGuesses; }
+    public void setNumberOfGuesses (int numberOfGuesses) { this.numberOfGuesses = numberOfGuesses;}
+    public String getSecretWord() { return secretWord; }
+    public void setSecretWord (String secretWord) { this.secretWord = secretWord;}
+    public String getUserGuess() {return userGuess;}
+    public void setUserGuess (String userGuess) { this.userGuess = userGuess;}
+    public int getIndexofGuessed (String userGuess) {return guessed.indexOf(userGuess);}
+    public StringBuilder getGuessed () {return guessed;}
+    public void setGuessed (String userGuess) { guessed.append(userGuess);}
+    public boolean isGameOver() {return GameOver;}
+
+    //Constructor
+    public HangedMan(int numberOfGuesses, String secretWord, String userGuess, StringBuilder guessed) {
+        this.numberOfGuesses = numberOfGuesses;
+        this.secretWord = secretWord;
+        this.userGuess = userGuess;
+        this.guessed = guessed;
+    }
+
+    public HangedMan() {}
 
     //Initiates a new game by picking a random word
     public void newGame() {
@@ -26,35 +50,36 @@ public class HangedMan {
 
     //Base method for making a guess
     public void makeGuess(char[] guess, char[] word) {
-        if (numberOfGuesses >= 8) {
+        while (!GameOver) {
+            if (numberOfGuesses >= 8) {
             printGallows();
             looseGame();
-        }
-        else {
-            printGallows();
-            for (int i = 0; i < guess.length; i++) {
-                System.out.print(guess[i]);
-                System.out.print(" ");
-        }
-        System.out.println();
-        System.out.println("Guesses: " + guessed);
-        System.out.print("Make a guess (letter or word, case sensitive): ");
-        userGuess = scanner.nextLine();
-            if (userGuess.length() < 1) {
-                System.out.println("That was not a valid guess!");
-                makeGuess(guess, word);
-            } else if (userGuess.length() > 1) {
-                evaluateWord(guess, word);
-            } else {
-                evaluateLetter(guess, word);
+            }
+            else {
+                printGallows();
+                for (int i = 0; i < guess.length; i++) {
+                    System.out.print(guess[i]);
+                    System.out.print(" ");
+                }
+                System.out.println();
+                System.out.println("Guesses: " + guessed);
+                System.out.print("Make a guess (letter or word, case sensitive): ");
+                userGuess = scanner.nextLine();
+                if (userGuess.length() < 1) {
+                    System.out.println("That was not a valid guess!");
+                } else if (userGuess.length() > 1) {
+                    evaluateWord(word);
+                } else {
+                    evaluateLetter(guess, word);
+                }
             }
         }
     }
 
     //Evaluates a whole word guess
-    public void evaluateWord(char[] guess, char[] word) {
+    public void evaluateWord(char[] word) {
+        printGallows();
         if (userGuess.equalsIgnoreCase(secretWord)) {
-            printGallows();
             for (int i = 0; i < word.length; i++) {
                 System.out.print(word[i]);
                 System.out.print(" ");
@@ -62,41 +87,46 @@ public class HangedMan {
             winGame();
         } else if  (guessed.indexOf(userGuess)>-1) {
             System.out.println("You already guessed that word!");
-            makeGuess(guess, word);
         } else {
             numberOfGuesses++;
             System.out.println("Sorry that was wrong!");
             guessed.append(userGuess);
             guessed.append(" ");
-            makeGuess(guess, word);
         }
     }
 
     //Evaluates a single letter guess
     public void evaluateLetter(char[] guess, char[] word) {
+        boolean[] present = new boolean[word.length];
         if  (guessed.indexOf(userGuess)>-1) {
                 System.out.println("You already guessed that letter!");
-                makeGuess(guess, word);
         }
         for (int i=0; i<word.length;) {
             if (userGuess.charAt(0) == word[i]) {
                 guess[i] = word[i];
+                present[i] = true;
                 i++;
             }
             else {
                 guess[i] = guess[i];
+                present[i] = false;
                 i++;
             }
         }
-        numberOfGuesses++;
-        guessed.append(userGuess);
-        guessed.append(" ");
-        makeGuess(guess, word);
+        if (containsAnyTrues(present)){
+            guessed.append(userGuess);
+            guessed.append(" ");
+        }
+        else {
+            numberOfGuesses++;
+            guessed.append(userGuess);
+            guessed.append(" ");
+        }
     }
 
     //Ascii graphic representing the number of tries left
     public void printGallows() {
-        System.out.println("/..Hanged Man v0.1..\\");
+        System.out.println("/..HangeMan v0.1..\\");
         switch (numberOfGuesses) {
             case 0:
                 System.out.println("       ");
@@ -181,16 +211,28 @@ public class HangedMan {
         }
     }
 
+
+    public boolean containsAnyTrues(boolean[] present) {
+        for (boolean num : present) {
+            if (num) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //Winner winner chicken dinner!
     public void winGame() {
         System.out.println();
         System.out.println("Correct! You won!");
+        GameOver = true;
     }
 
     //User is a LOOSER
     public void looseGame() {
         System.out.println();
         System.out.println("You LOOSE! You're hanged!");
+        GameOver =true;
     }
 }
 
