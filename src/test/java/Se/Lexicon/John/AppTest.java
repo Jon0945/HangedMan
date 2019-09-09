@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 
 public class AppTest {
     private HangedMan testGame = new HangedMan();
@@ -14,6 +13,7 @@ public class AppTest {
     public void setup() {
         testGame.setNumberOfGuesses(0);
         testGame.setSecretWord("Test");
+
 
 
     }
@@ -47,26 +47,9 @@ public class AppTest {
 
         //Assert
         assertFalse(win);
-        assertEquals(actualCounter,expectedCounter,0);
+        assertEquals(actualCounter,expectedCounter);
 
 
-    }
-
-    @Test
-    public void testAlreadyGuessedWord() {
-        //Arrange
-        testGame.setUserGuess("Pony");
-        testGame.setGuessed("Pony");
-        char[] word = testGame.getSecretWord().toCharArray();
-        StringBuilder testGameGuessedd = testGame.getGuessed();
-        int expectedIndex = 0;
-
-        //Act
-        testGame.evaluateWord(word);
-        int actualIndex = testGame.(testGame.getUserGuess());
-
-        //Assert
-        assertEquals(actualIndex,expectedIndex,0);
     }
 }
 

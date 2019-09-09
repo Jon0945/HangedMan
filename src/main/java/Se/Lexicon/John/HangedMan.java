@@ -11,8 +11,9 @@ public class HangedMan {
     private String secretWord;
     private String[] secretWordBank = {"Door", "Horse", "Football", "Beer", "Refreshing", "Shower", "Stadium", "Lemon", "Strawberry", "Cloudberry"};
     private String userGuess;
-    private StringBuilder guessed;
+    private StringBuilder guessed = new StringBuilder();
     private boolean GameOver = false;
+
 
     //Getters and Setters
     public String[] getSecretWordBank() { return secretWordBank; }
